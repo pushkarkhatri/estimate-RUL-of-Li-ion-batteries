@@ -10,7 +10,7 @@ This case study addresses the challenge of estimating the Remaining Useful Life 
 
 ### Objective
 
-- **Goal:** Predict the RUL of lithium-ion batteries using voltage, current, temperature, and other derived features.
+- **Goal:** Estimate the Remaining Useful Life (RUL) of lithium-ion batteries using voltage, current, temperature, and other derived features.
 - **Approach:** Employ feature engineering and regression-based machine learning models (Random Forest, Extra Trees, MLP, LSTM, etc.) to model battery capacity degradation and estimate RUL.
 
 ### Assumptions
@@ -71,12 +71,41 @@ This case study addresses the challenge of estimating the Remaining Useful Life 
 ## 4. Schematic Diagram
 
 ```mermaid
-flowchart TD
-    A[Raw NASA Battery Data (.mat)] --> B[Data Processing & Cleaning]
-    B --> C[Cycle-wise CSVs & Metadata]
-    C --> D[Feature Engineering]
-    D --> E[Feature Matrix (X), Target (y)]
-    E --> F[Train-Test Split]
-    F --> G[Model Training (RF, ETR, MLP, LSTM)]
-    G --> H[Model Evaluation (MAE, RMSE, R², CV)]
-    H --> I[RUL Prediction & Visualization]
+---
+config:
+  layout: fixed
+---
+flowchart TB
+ subgraph Dataset[" "]
+        D1[("Training Data")]
+        D["Train/Test Split"]
+        D2[("Test Data")]
+  end
+ subgraph model_Section[" "]
+    direction LR
+        M("Pre-processing")
+        L[("New data")]
+        K("Final Model")
+        N("RUL Estimation
+& Visualization")
+  end
+    A["Raw NASA Battery Data"] --> B["Pre-processing & Cleaning"]
+    B --> C["EDA Analysis"]
+    C --> D
+    D --> D1 & D2
+    D1 --> F("Data processing:
+Feature Engineering,
+Feature matrix etc.")
+    F --> G("Model Selection:
+Decision trees or
+Neural Networks")
+    G --> H("Model Training")
+    H --> I("Model Evaluation")
+    D2 --> I
+    I --> J{"Model Ready?"}
+    J -- | No | --> G
+    J -- | Yes| --> K
+    L --> M
+    M --> K
+    K --> N
+```
